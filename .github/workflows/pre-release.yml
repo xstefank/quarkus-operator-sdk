@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - '.github/project.yml'
+  workflow_dispatch:
+
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -11,6 +13,25 @@ concurrency:
 
 jobs:
   pre-release:
+    runs-on: ubuntu-latest
     name: Pre-Release
-    uses: quarkiverse/.github/.github/workflows/pre-release.yml@main
-    secrets: inherit
+#    uses: quarkiverse/.github/.github/workflows/pre-release.yml@main
+#    secrets: inherit
+
+    steps:
+      - uses: radcortez/project-metadata-action@main
+        name: Retrieve project metadata
+        id: metadata
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          metadata-file-path: '.github/project.yml'
+          local-file: true
+
+      - name: Test output metadata values
+        run: |
+          echo "CURRENT_VERSION=${{steps.metadata.outputs.current-version}}"
+          echo "NEXT_VERSION=${{steps.metadata.outputs.next-version}}"
+
+#      - uses: quarkiverse/.github/.github/workflows/pre-release.yml@main
+#        name: Pre-Release
+#        secrets: inherit
