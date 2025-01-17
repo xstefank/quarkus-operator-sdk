@@ -2,7 +2,7 @@ name: Quarkiverse Prepare Release
 
 on:
   pull_request:
-    types: [ closed ]
+#    types: [ closed ]
     paths:
       - '.github/project.yml'
 
@@ -13,6 +13,6 @@ concurrency:
 jobs:
   prepare-release:
     name: Prepare Release
-    if: ${{ github.event.pull_request.merged == true}}
-    uses: quarkiverse/.github/.github/workflows/prepare-release.yml@main
+#    if: ${{ github.event.pull_request.merged == true}}
+    uses: xstefank/.github/.github/workflows/prepare-release.yml
     secrets: inherit
