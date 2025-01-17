@@ -32,9 +32,19 @@ jobs:
         with:
           ref: ${{github.event.inputs.tag || github.ref_name}}
 
+      - uses: radcortez/project-metadata-action@main
+        name: Retrieve project metadata
+        id: metadata
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          metadata-file-path: '.github/project.yml'
+          local-file: true
+
       - name: Gather versions
         id: versions
         run: |
+          echo "My quarkus platform branch -> ${{steps.metadata.outputs.quarkus-platform-branch}}."
+          
           quarkus_version=$(./mvnw help:evaluate -Dexpression=quarkus.version -q -DforceStdout)
           quarkus_major=$(echo ${quarkus_version} | cut -d . -f 1,2)
           echo "QOSDK-defined Quarkus version: ${quarkus_version} (-> major: ${quarkus_major})"
@@ -63,35 +73,35 @@ jobs:
             fi
           fi
 
-      - name: Wait for QOSDK BOM to be published
-        uses: quarkusio/monitor-artifact-publication-action@main
-        id: wait-for-bom
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          group-id: io.quarkiverse.operatorsdk
-          artifact-id: quarkus-operator-sdk-bom
-          version: ${{github.event.inputs.tag || github.ref_name}}
-          initial-delay: 0
-          poll-delay: 1
-          poll-iterations: 10
-          post-delay: 0
+#      - name: Wait for QOSDK BOM to be published
+#        uses: quarkusio/monitor-artifact-publication-action@main
+#        id: wait-for-bom
+#        with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          group-id: io.quarkiverse.operatorsdk
+#          artifact-id: quarkus-operator-sdk-bom
+#          version: ${{github.event.inputs.tag || github.ref_name}}
+#          initial-delay: 0
+#          poll-delay: 1
+#          poll-iterations: 10
+#          post-delay: 0
 
-  update-quarkus-platform-branch:
-    uses: ./.github/workflows/release-quarkus-platform-pr.yml
-    needs:
-      - prepare-platform-pr
-    with:
-      qosdk-version: ${{github.event.inputs.tag || github.ref_name}}
-      quarkus-platform-branch: ${{needs.prepare-platform-pr.outputs.quarkus-platform-branch}}
-    secrets:
-      qosdk-bot-token: ${{ secrets.QOSDK_BOT_TOKEN }}
-
-  update-quarkus-platform-main-if-needed:
-    needs:
-      - prepare-platform-pr
-    if: ${{ needs.prepare-platform-pr.outputs.needs-main-pr && needs.prepare-platform-pr.outputs.quarkus-platform-branch != 'main' }}
-    uses: ./.github/workflows/release-quarkus-platform-pr.yml
-    with:
-      qosdk-version: ${{github.event.inputs.tag || github.ref_name}}
-    secrets:
-      qosdk-bot-token: ${{ secrets.QOSDK_BOT_TOKEN }}
+#  update-quarkus-platform-branch:
+#    uses: ./.github/workflows/release-quarkus-platform-pr.yml
+#    needs:
+#      - prepare-platform-pr
+#    with:
+#      qosdk-version: ${{github.event.inputs.tag || github.ref_name}}
+#      quarkus-platform-branch: ${{needs.prepare-platform-pr.outputs.quarkus-platform-branch}}
+#    secrets:
+#      qosdk-bot-token: ${{ secrets.QOSDK_BOT_TOKEN }}
+#
+#  update-quarkus-platform-main-if-needed:
+#    needs:
+#      - prepare-platform-pr
+#    if: ${{ needs.prepare-platform-pr.outputs.needs-main-pr && needs.prepare-platform-pr.outputs.quarkus-platform-branch != 'main' }}
+#    uses: ./.github/workflows/release-quarkus-platform-pr.yml
+#    with:
+#      qosdk-version: ${{github.event.inputs.tag || github.ref_name}}
+#    secrets:
+#      qosdk-bot-token: ${{ secrets.QOSDK_BOT_TOKEN }}

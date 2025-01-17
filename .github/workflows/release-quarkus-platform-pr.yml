@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          repository: quarkusio/quarkus-platform
+          repository: xstefank/quarkus-platform
           ref: ${{inputs.quarkus-platform-branch}}
 
       - uses: actions/setup-java@v4
@@ -34,18 +34,18 @@ jobs:
           ./mvnw -B versions:set-property -Dproperty=quarkus-operator-sdk.version -DnewVersion=${{inputs.qosdk-version}}
           ./mvnw -Dsync
 
-      - name: Create quarkus-platform pull request
-        uses: peter-evans/create-pull-request@v7
-        id: qp-pr
-        with:
-          title: "Update QOSDK to ${{inputs.qosdk-version}} for ${{inputs.quarkus-platform-branch}}"
-          commit-message: "Update QOSDK to ${{inputs.qosdk-version}}"
-          committer: metacosm <metacosm@users.noreply.github.com>
-          author: metacosm <metacosm@users.noreply.github.com>
-          branch: qosdk-release-${{inputs.qosdk-version}}-${{inputs.quarkus-platform-branch}}
-          token: ${{ secrets.qosdk-bot-token }}
-          push-to-fork: qosdk-bot/quarkus-platform
-          delete-branch: true
+#      - name: Create quarkus-platform pull request
+#        uses: peter-evans/create-pull-request@v7
+#        id: qp-pr
+#        with:
+#          title: "Update QOSDK to ${{inputs.qosdk-version}} for ${{inputs.quarkus-platform-branch}}"
+#          commit-message: "Update QOSDK to ${{inputs.qosdk-version}}"
+#          committer: xstefank <xstefank@users.noreply.github.com>
+#          author: xstefank <xstefank@users.noreply.github.com>
+#          branch: qosdk-release-${{inputs.qosdk-version}}-${{inputs.quarkus-platform-branch}}
+#          token: ${{ secrets.qosdk-bot-token }}
+##          push-to-fork: qosdk-bot/quarkus-platform
+#          delete-branch: true
 
       - name: Check quarkus-platform PR
         if: ${{ steps.qp-pr.outputs.pull-request-number }}
