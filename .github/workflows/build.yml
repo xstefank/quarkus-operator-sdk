@@ -1,28 +1,30 @@
 name: Build PRs and main when updated
 
 on:
-  push:
-    branches:
-      - "main"
-    paths-ignore:
-      - '.gitignore'
-      - 'CODEOWNERS'
-      - 'LICENSE'
-      - '*.md'
-      - '*.adoc'
-      - '*.txt'
-      - '.all-contributorsrc'
-  pull_request:
-    branches-ignore:
-      - "next-fabric8-version" # only build that branch daily in specific workflow
-    paths-ignore:
-      - '.gitignore'
-      - 'CODEOWNERS'
-      - 'LICENSE'
-      - '*.md'
-      - '*.adoc'
-      - '*.txt'
-      - '.all-contributorsrc'
+#  push:
+#    branches:
+#      - "main"
+#    paths-ignore:
+#      - '.gitignore'
+#      - 'CODEOWNERS'
+#      - 'LICENSE'
+#      - '*.md'
+#      - '*.adoc'
+#      - '*.txt'
+#      - '.all-contributorsrc'
+#  pull_request:
+#    branches-ignore:
+#      - "next-fabric8-version" # only build that branch daily in specific workflow
+#    paths-ignore:
+#      - '.gitignore'
+#      - 'CODEOWNERS'
+#      - 'LICENSE'
+#      - '*.md'
+#      - '*.adoc'
+#      - '*.txt'
+#      - '.all-contributorsrc'
+  workflow_dispatch:
+
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.ref }}"

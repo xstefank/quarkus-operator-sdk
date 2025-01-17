@@ -2,3 +2,7 @@
 
 echo "Test script hook invoked."
 
+pwd
+
+ls
+1
