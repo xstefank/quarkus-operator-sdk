@@ -1,9 +1,11 @@
 name: Quarkiverse Pre Release
 
 on:
-  pull_request:
-    paths:
-      - '.github/project.yml'
+  workflow_dispatch:
+
+#  pull_request:
+#    paths:
+#      - '.github/project.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -12,5 +14,5 @@ concurrency:
 jobs:
   pre-release:
     name: Pre-Release
-    uses: quarkiverse/.github/.github/workflows/pre-release.yml@main
+    uses: xstefank/.github/.github/workflows/pre-release.yml@main
     secrets: inherit
