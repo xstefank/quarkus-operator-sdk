@@ -1,5 +1,6 @@
 name: Java Operator SDK Extension
 release:
-  current-version: 7.0.0.CR1
+  current-version: 7.0.0.CR1=asdfasdf
   next-version: 7.0.0-SNAPSHOT
+  quarkus-version: 3.18.0.CR1
 

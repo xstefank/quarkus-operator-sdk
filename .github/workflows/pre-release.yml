@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - '.github/project.yml'
+  workflow_dispatch:
+
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -11,6 +13,32 @@ concurrency:
 
 jobs:
   pre-release:
+    runs-on: ubuntu-latest
     name: Pre-Release
-    uses: quarkiverse/.github/.github/workflows/pre-release.yml@main
-    secrets: inherit
+#    uses: quarkiverse/.github/.github/workflows/pre-release.yml@main
+#    secrets: inherit
+
+    steps:
+      - uses: xstefank/project-metadata-action@main
+        name: Retrieve project metadata
+        id: metadata
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          metadata-file-path: '.github/project.yml'
+
+      - name: Set environment variables
+        run: |
+          echo "CURRENT_VERSION=${{steps.metadata.outputs.current-version}}" >> $GITHUB_ENV
+          echo "NEXT_VERSION=${{steps.metadata.outputs.next-version}}" >> $GITHUB_ENV
+          echo "QUARKUS_VERSION=${{steps.metadata.outputs.quarkus-version}}" >> $GITHUB_ENV
+
+      - name: Read env vars
+        run: |
+          echo "$CURRENT_VERSION"
+          echo "$NEXT_VERSION"
+          echo "$QUARKUS_VERSION"
+
+#      - uses: quarkiverse/.github/.github/workflows/pre-release.yml@main
+#        name: Pre-Release
+#        secrets: inherit
+
