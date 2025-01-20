@@ -3,5 +3,5 @@ release:
   current-version: 7.0.0.CR1
   next-version: 7.0.0-SNAPSHOT
   quarkus-platform:
-    branch: non-existent-branch
+    target-branch: non-existent-branch
     needs-main-pr: false
