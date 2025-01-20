@@ -2,4 +2,4 @@ name: Java Operator SDK Extension
 release:
   current-version: 7.0.0.CR1
   next-version: 7.0.0-SNAPSHOT
-  quarkus-platform-branch: whatever-branch
+  quarkus-platform-branch: non-existent-branch
