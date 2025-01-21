@@ -2,26 +2,28 @@ name: Deploy Snapshot
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        type: string
-        required: false
-        default: 'main'
-        description: 'The branch from which the snapshot should be built'
-      version:
-        type: string
-        required: false
-        description: 'The desired snapshot version'
 
-  workflow_call:
-    inputs:
-      branch:
-        type: string
-        required: false
-        default: 'main'
-      version:
-        type: string
-        required: false
+#  workflow_dispatch:
+#    inputs:
+#      branch:
+#        type: string
+#        required: false
+#        default: 'main'
+#        description: 'The branch from which the snapshot should be built'
+#      version:
+#        type: string
+#        required: false
+#        description: 'The desired snapshot version'
+#
+#  workflow_call:
+#    inputs:
+#      branch:
+#        type: string
+#        required: false
+#        default: 'main'
+#      version:
+#        type: string
+#        required: false
 
 defaults:
   run:
