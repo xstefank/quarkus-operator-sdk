@@ -32,7 +32,7 @@ jobs:
         with:
           ref: ${{github.event.inputs.tag || github.ref_name}}
 
-      - uses: radcortez/project-metadata-action@main
+      - uses: xstefank/project-metadata-action@main
         name: Retrieve project metadata
         id: metadata
         with:
