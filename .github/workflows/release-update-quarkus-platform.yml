@@ -43,7 +43,7 @@ jobs:
       - name: Gather versions
         id: versions
         run: |
-          echo "--> ${{steps.metadata.outputs.json}}."
+          for branch in $(echo ${{steps.metadata.outputs.json}} | jq '.release.["quarkus-platform-branches"][]'); do echo "my branch - $branch"; done
           
 #          quarkus_version=$(./mvnw help:evaluate -Dexpression=quarkus.version -q -DforceStdout)
 #          quarkus_major=$(echo ${quarkus_version} | cut -d . -f 1,2)
