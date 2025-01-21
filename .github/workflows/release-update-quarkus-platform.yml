@@ -44,7 +44,11 @@ jobs:
         id: versions
         run: |
           echo "My quarkus platform branches -> ${{steps.metadata.outputs.quarkus-platform-branches}}."
-          
+#          quarkus_platform_branches=$(echo $JSON | jq -c '.release.["quarkus-platform-branches"]')
+          echo "quarkus_platform_branch=testing" >> $GITHUB_OUTPUT
+#          echo $GITHUB_OUTPUT
+
+
 #          quarkus_version=$(./mvnw help:evaluate -Dexpression=quarkus.version -q -DforceStdout)
 #          quarkus_major=$(echo ${quarkus_version} | cut -d . -f 1,2)
 #          echo "QOSDK-defined Quarkus version: ${quarkus_version} (-> major: ${quarkus_major})"
