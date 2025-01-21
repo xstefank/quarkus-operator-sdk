@@ -24,8 +24,7 @@ jobs:
 
     outputs:
       released: ${{steps.wait-for-bom.outputs.published}}
-      quarkus-platform-branch: ${{steps.versions.outputs.quarkus_platform_branch}}
-      needs-main-pr: ${{ steps.versions.outputs.needs_main_pr == 'true' }}
+      quarkus-platform-branches: ${{steps.quarkus-branches.outputs.quarkus_platform_branches}}
 
     steps:
       - uses: actions/checkout@v4
@@ -40,10 +39,12 @@ jobs:
           metadata-file-path: '.github/project.yml'
           local-file: true
 
-      - name: Gather versions
-        id: versions
+      - name: Gather Quarkus platform branches
+        id: quarkus-branches
         run: |
-          echo "My quarkus platform branches -> ${{steps.metadata.outputs.quarkus-platform-branches}}."
+#          quarkus_platform_branches=$(echo $JSON | jq -c '.release.["quarkus-platform-branches"]')
+          echo "quarkus_platform_branches=testing" >> $GITHUB_OUTPUT
+          echo $GITHUB_OUTPUT
           
 #          quarkus_version=$(./mvnw help:evaluate -Dexpression=quarkus.version -q -DforceStdout)
 #          quarkus_major=$(echo ${quarkus_version} | cut -d . -f 1,2)
@@ -86,15 +87,15 @@ jobs:
 #          poll-iterations: 10
 #          post-delay: 0
 
-#  update-quarkus-platform-branch:
-#    uses: ./.github/workflows/release-quarkus-platform-pr.yml
-#    needs:
-#      - prepare-platform-pr
-#    with:
-#      qosdk-version: ${{github.event.inputs.tag || github.ref_name}}
-#      quarkus-platform-branch: ${{needs.prepare-platform-pr.outputs.quarkus-platform-branch}}
-#    secrets:
-#      qosdk-bot-token: ${{ secrets.QOSDK_BOT_TOKEN }}
+  quarkus-platform-branches-pr:
+    uses: ./.github/workflows/release-quarkus-platform-pr.yml
+    needs:
+      - prepare-platform-pr
+    with:
+      qosdk-version: ${{github.event.inputs.tag || github.ref_name}}
+      quarkus-platform-branch: ${{needs.prepare-platform-pr.outputs.quarkus-platform-branches}}
+    secrets:
+      qosdk-bot-token: ${{ secrets.QOSDK_BOT_TOKEN }}
 #
 #  update-quarkus-platform-main-if-needed:
 #    needs:
