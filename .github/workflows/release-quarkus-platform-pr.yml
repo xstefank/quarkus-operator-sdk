@@ -6,10 +6,9 @@ on:
       qosdk-version:
         type: string
         required: true
-      quarkus-platform-branch:
+      quarkus-platform-branches:
         type: string
-        required: false
-        default: 'main'
+        required: true
     secrets:
       qosdk-bot-token:
         required: true
@@ -18,21 +17,25 @@ jobs:
   quarkus-platform-pr:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          repository: xstefank/quarkus-platform
-          ref: ${{inputs.quarkus-platform-branch}}
+      - run: |
+          echo "Input param - ${{inputs.quarkus-platform-branches}}"
+          for branch in $(echo "${{inputs.quarkus-platform-branches}} | jq '.[]'); do echo "my branch - $branch"; done
 
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: 17
-          cache: 'maven'
-
-      - name: Update QOSDK version to ${{inputs.qosdk-version}} in quarkus-platform ${{inputs.quarkus-platform-branch}}
-        run: |
-          ./mvnw -B versions:set-property -Dproperty=quarkus-operator-sdk.version -DnewVersion=${{inputs.qosdk-version}}
-          ./mvnw -Dsync
+#      - uses: actions/checkout@v4
+#        with:
+#          repository: xstefank/quarkus-platform
+#          ref: ${{inputs.quarkus-platform-branch}}
+#
+#      - uses: actions/setup-java@v4
+#        with:
+#          distribution: 'temurin'
+#          java-version: 17
+#          cache: 'maven'
+#
+#      - name: Update QOSDK version to ${{inputs.qosdk-version}} in quarkus-platform ${{inputs.quarkus-platform-branch}}
+#        run: |
+#          ./mvnw -B versions:set-property -Dproperty=quarkus-operator-sdk.version -DnewVersion=${{inputs.qosdk-version}}
+#          ./mvnw -Dsync
 
 #      - name: Create quarkus-platform pull request
 #        uses: peter-evans/create-pull-request@v7
@@ -47,8 +50,8 @@ jobs:
 ##          push-to-fork: qosdk-bot/quarkus-platform
 #          delete-branch: true
 
-      - name: Check quarkus-platform PR
-        if: ${{ steps.qp-pr.outputs.pull-request-number }}
-        run: |
-          echo "Pull Request Number - ${{ steps.qp-pr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.qp-pr.outputs.pull-request-url }}"
+#      - name: Check quarkus-platform PR
+#        if: ${{ steps.qp-pr.outputs.pull-request-number }}
+#        run: |
+#          echo "Pull Request Number - ${{ steps.qp-pr.outputs.pull-request-number }}"
+#          echo "Pull Request URL - ${{ steps.qp-pr.outputs.pull-request-url }}"
