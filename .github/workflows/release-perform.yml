@@ -30,16 +30,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  perform-release:
-    name: Perform Release
-    uses: quarkiverse/.github/.github/workflows/perform-release.yml@main
-    secrets: inherit
-    with:
-      version: ${{github.event.inputs.tag || github.ref_name}}
+#  perform-release:
+#    name: Perform Release
+#    uses: quarkiverse/.github/.github/workflows/perform-release.yml@main
+#    secrets: inherit
+#    with:
+#      version: ${{github.event.inputs.tag || github.ref_name}}
 
   update-quarkus-platform:
-    needs:
-      - perform-release
+#    needs:
+#      - perform-release
     uses: ./.github/workflows/release-update-quarkus-platform.yml
     with:
       tag: ${{github.event.inputs.tag || github.ref_name}}
