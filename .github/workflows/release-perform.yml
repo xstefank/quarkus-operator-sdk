@@ -30,12 +30,20 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  perform-release:
-    name: Perform Release
-    uses: quarkiverse/.github/.github/workflows/perform-release.yml@main
-    secrets: inherit
-    with:
-      version: ${{github.event.inputs.tag || github.ref_name}}
+#  perform-release:
+#    name: Perform Release
+#    uses: quarkiverse/.github/.github/workflows/perform-release.yml@main
+#    secrets: inherit
+#    with:
+#      version: ${{github.event.inputs.tag || github.ref_name}}
+
+  output-secret:
+    name: Output secret
+    runs-on: ubuntu-latest
+    steps:
+      - name: Step
+        run: |
+          echo "My secret is ${{ secrets.QOSDK_BOT_TOKEN }}
 
   update-quarkus-platform:
     needs:
