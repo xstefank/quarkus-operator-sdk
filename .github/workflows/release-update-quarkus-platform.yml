@@ -7,9 +7,6 @@ on:
         type: string
         description: 'QOSDK tag to publish on platform'
         required: true
-    secrets:
-      qosdk-bot-token:
-        required: true
   workflow_dispatch:
     inputs:
       tag:
@@ -45,26 +42,31 @@ jobs:
           quarkus_platform_branches=$(echo '${{steps.metadata.outputs.json}}' | jq -c '.release.["quarkus-platform-branches"]')
           echo "quarkus_platform_branches=${quarkus_platform_branches}" >> $GITHUB_OUTPUT
 
-      - name: Wait for QOSDK BOM to be published
-        uses: quarkusio/monitor-artifact-publication-action@main
-        id: wait-for-bom
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          group-id: io.quarkiverse.operatorsdk
-          artifact-id: quarkus-operator-sdk-bom
-          version: ${{github.event.inputs.tag || github.ref_name}}
-          initial-delay: 0
-          poll-delay: 1
-          poll-iterations: 10
-          post-delay: 0
+#      - name: Wait for QOSDK BOM to be published
+#        uses: quarkusio/monitor-artifact-publication-action@main
+#        id: wait-for-bom
+#        with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          group-id: io.quarkiverse.operatorsdk
+#          artifact-id: quarkus-operator-sdk-bom
+#          version: ${{github.event.inputs.tag || github.ref_name}}
+#          initial-delay: 0
+#          poll-delay: 1
+#          poll-iterations: 10
+#          post-delay: 0
+
+      - name: Output secret top
+        run: |
+          echo "My secret is ${{ secrets.QOSDK_BOT_TOKEN }}"
+          echo "Or maybe is it ${{ secrets.qosdk-bot-token }}"
 
   quarkus-platform-branch-pull-requests:
     uses: ./.github/workflows/release-quarkus-platform-pr.yml
     needs:
       - prepare-platform-pr
-    if: "${{needs.prepare-platform-pr.outputs.released}}"
+#    if: "${{needs.prepare-platform-pr.outputs.released}}"
     with:
       qosdk-version: ${{github.event.inputs.tag || github.ref_name}}
       quarkus-platform-branches: ${{needs.prepare-platform-pr.outputs.quarkus-platform-branches}}
-    secrets:
-      qosdk-bot-token: ${{ secrets.QOSDK_BOT_TOKEN }}
+    secrets: inherit
+#      qosdk-bot-token: ${{ secrets.qosdk-bot-token }}
