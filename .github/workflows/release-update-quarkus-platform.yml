@@ -58,6 +58,11 @@ jobs:
           poll-iterations: 10
           post-delay: 0
 
+      - name: Output secret
+        run: |
+          echo "My secret is ${{ secrets.QOSDK_BOT_TOKEN }}"
+          ehco "Or maybe is it ${{ secrets.qosdk-bot-token }}"
+
   quarkus-platform-branch-pull-requests:
     uses: ./.github/workflows/release-quarkus-platform-pr.yml
     needs:
