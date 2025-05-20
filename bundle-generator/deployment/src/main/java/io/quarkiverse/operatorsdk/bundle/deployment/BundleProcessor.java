@@ -488,7 +488,7 @@ public class BundleProcessor {
                 origin);
     }
 
-    private static Map<String, String> extractNameValueMap(AnnotationValue annotationValue) {
+    private Map<String, String> extractNameValueMap(AnnotationValue annotationValue) {
         Map<String, String> map;
         if (annotationValue != null) {
             final var array = annotationValue.asNestedArray();
