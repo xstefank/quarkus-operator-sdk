@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 
 import io.fabric8.kubernetes.api.model.AuthInfo;
 import io.fabric8.kubernetes.api.model.Cluster;
@@ -12,11 +13,35 @@ import io.fabric8.kubernetes.api.model.Context;
 import io.fabric8.kubernetes.api.model.NamedAuthInfo;
 import io.fabric8.kubernetes.api.model.NamedCluster;
 import io.fabric8.kubernetes.api.model.NamedContext;
+import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientBuilder;
+import io.quarkus.test.common.DevServicesContext;
 
 public class KubeUtils {
 
     public static final String HELM_TEST = "helmtest";
+
+    /**
+     * Builds a {@link KubernetesClient} pointing at the Kubernetes Client Dev Services cluster,
+     * from the connection properties exposed via {@link DevServicesContext}. Needed in
+     * {@code @QuarkusIntegrationTest}s since the tested artifact runs in a separate process, so
+     * the client can't be obtained via CDI injection like in a {@code @QuarkusTest}.
+     */
+    public static KubernetesClient createDevServicesClient(DevServicesContext context) {
+        Map<String, String> props = context.devServicesProperties();
+
+        io.fabric8.kubernetes.client.Config kubeConfig = new ConfigBuilder()
+                .withMasterUrl(props.get("quarkus.kubernetes-client.api-server-url"))
+                .withCaCertData(props.get("quarkus.kubernetes-client.ca-cert-data"))
+                .withClientCertData(props.get("quarkus.kubernetes-client.client-cert-data"))
+                .withClientKeyData(props.get("quarkus.kubernetes-client.client-key-data"))
+                .withClientKeyAlgo(props.get("quarkus.kubernetes-client.client-key-algo"))
+                .withNamespace(props.get("quarkus.kubernetes-client.namespace"))
+                .build();
+
+        return new KubernetesClientBuilder().withConfig(kubeConfig).build();
+    }
 
     public static File generateConfigFromClient(KubernetesClient client) {
         try {

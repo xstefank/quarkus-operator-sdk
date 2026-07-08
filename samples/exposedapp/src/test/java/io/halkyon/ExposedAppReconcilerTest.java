@@ -7,12 +7,12 @@ import static org.hamcrest.Matchers.nullValue;
 
 import java.util.concurrent.TimeUnit;
 
-import jakarta.inject.Inject;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.fabric8.kubernetes.api.model.ObjectMetaBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.quarkus.arc.Arc;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
@@ -20,8 +20,12 @@ class ExposedAppReconcilerTest {
 
     public static final String TEST_APP = "test-app";
 
-    @Inject
     protected KubernetesClient client;
+
+    @BeforeEach
+    void setUpClient() throws Exception {
+        client = Arc.container().select(KubernetesClient.class).get();
+    }
 
     @Test
     void reconcileShouldWork() {
